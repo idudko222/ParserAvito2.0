@@ -12,12 +12,11 @@ class PropertyExtractor:
         try:
             price_element = self.soup.select_one(loc.PRICE[1])
             if price_element:
-                price_text = price_element.text.strip().replace("\xa0", "").replace("₽", "")
-
-            return price_text
+               return price_element.text.strip().replace("\xa0", "").replace("₽", "")
 
         except AttributeError as e:
             print(f'Цена не найдена: {e}')
+            return None
 
     def get_date(self):
         try:
