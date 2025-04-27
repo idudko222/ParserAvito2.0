@@ -65,3 +65,31 @@ class PropertyExtractor:
 
         return coordinates
 
+    def get_region(self):
+        try:
+            region_element = self.soup.select_one(loc.GEO[1])
+            if region_element:
+                region_text = region_element.text.strip().split(",")[0].strip()
+
+                replacements = {
+                    "обл.": "область",
+                    "Обл.": "область",
+                    "АО": "автономный округ",
+                    "Республика Северная Осетия — Владикавказ": "Республика Северная Осетия — Алания",
+                    "Севастополь": "Республика Крым",
+                    "Республика Татарстан (Татарстан)": "Республика Татарстан",
+                }
+
+                for old, new in replacements.items():
+                    if old in region_text:
+                        region_text = region_text.replace(old, new)
+
+                return region_text
+
+            else:
+                print("Элемент с регионом не найден.")
+
+        except Exception as e:
+            print(f"Ошибка парсинга региона: {e}")
+
+        return None
