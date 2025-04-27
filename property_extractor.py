@@ -3,9 +3,10 @@ from bs4 import BeautifulSoup
 from locator import LocatorAvito as loc
 from datetime import datetime, timedelta
 
+
 class PropertyExtractor:
     def __init__(self, html):
-        self.soup = BeautifulSoup(html,'html.parser')
+        self.soup = BeautifulSoup(html, 'html.parser')
 
     def get_price(self):
         try:
@@ -50,7 +51,7 @@ class PropertyExtractor:
         coordinates = {"lat": None, "lon": None}
         try:
             # Ищем блок с картой
-            map_block =self.soup.find("div", {"class": "style-item-map-wrapper-ElFsX"})
+            map_block = self.soup.find("div", {"class": "style-item-map-wrapper-ElFsX"})
             if map_block:
                 # Извлекаем широту и долготу из атрибутов
                 lat = map_block.get("data-map-lat")
@@ -94,7 +95,7 @@ class PropertyExtractor:
 
         return None
 
-    def get_info(self):
+    def get_extra_info(self):
         try:
             params_blocks = self.soup.find_all("div", {"data-marker": "item-view/item-params"})
 
@@ -147,3 +148,24 @@ class PropertyExtractor:
         except AttributeError as e:
             print(f"Ошибка парсинга доп данных: {e}")
             return None
+
+    def get_object_type(self):
+        """Извлекает тип объекта (Новостройки/Вторичка) из блока навигации."""
+        try:
+            # Ищем блок навигации
+            nav_block = self.soup.find("div", {"data-marker": "item-navigation"})
+            if nav_block:
+                # Ищем все ссылки внутри блока
+                links = nav_block.find_all("a", class_="breadcrumbs-link-Vr4Nc")
+
+                # Проверяем, что есть хотя бы 5 элементов
+                if len(links) >= 5:
+                    # Пятый элемент — это тип объекта (Новостройки/Вторичка)
+                    object_type = links[4].text.strip()
+                    if object_type == 'Вторичка':
+                        return 1
+                    else:
+                        return 2
+        except Exception as e:
+            print(f"Ошибка парсинга типа объекта: {e}")
+        return None
