@@ -45,5 +45,23 @@ class PropertyExtractor:
             print(f"Ошибка при парсинге даты: {e}")
         return None
 
+    def get_coordinates(self):
+        """Извлекает координаты (широту и долготу) из блока с картой."""
+        coordinates = {"lat": None, "lon": None}
+        try:
+            # Ищем блок с картой
+            map_block =self.soup.find("div", {"class": "style-item-map-wrapper-ElFsX"})
+            if map_block:
+                # Извлекаем широту и долготу из атрибутов
+                lat = map_block.get("data-map-lat")
+                lon = map_block.get("data-map-lon")
 
+                # Проверяем, что координаты не None
+                if lat and lon:
+                    coordinates["lat"] = float(lat)  # Преобразуем в float
+                    coordinates["lon"] = float(lon)  # Преобразуем в float
+        except Exception as e:
+            print(f"Ошибка парсинга координат: {e}")
+
+        return coordinates
 
