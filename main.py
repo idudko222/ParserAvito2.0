@@ -19,7 +19,10 @@ def main():
         link_processor = LinkProcessor(driver, user_emulator, data_parser, csv_manager, 3)
 
         links = csv_manager.read_links()
-        for link in links:
+        total_links = len(links)
+
+        for i, link in enumerate(links, 1):
+            print(f"\nОбработка {i}/{total_links}: {link}")
             link_processor.process_link(link)
 
 

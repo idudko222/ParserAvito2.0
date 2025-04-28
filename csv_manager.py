@@ -30,7 +30,7 @@ class CSVManager:
         ]
 
         try:
-            with open(self.out_file, mode="a", encoding="utf-8") as file:
+            with open(self.out_file, mode="a", encoding="utf-8", newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=headers)
                 if file.tell() == 0:
                     writer.writeheader()

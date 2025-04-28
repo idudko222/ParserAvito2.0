@@ -46,7 +46,8 @@ class DataParser:
             if any(data.get(field) in (None, "") for field in required_fields):
                 print(f"Пропуск записи: не хватает данных для {link}")
                 return None
-
+            if data:
+                print("Успешно обработана")
             return data
 
         except Exception as e:
