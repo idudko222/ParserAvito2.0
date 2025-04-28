@@ -17,7 +17,7 @@ def main():
 
         links = csv_manager.read_links()
         for link in links:
-            link_processor.process_link(driver, link)
+            link_processor.process_link(link)
 
 
 

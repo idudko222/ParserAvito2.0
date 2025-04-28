@@ -1,4 +1,5 @@
-import random, time
+import random
+import time
 from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 
@@ -11,30 +12,44 @@ class LinkProcessor:
         self.csv_manager = csv_manager
         self.max_retries = max_retries
 
-    def process_link(self, driver, link):
+    def process_link(self, link):
+        """Обрабатывает одну ссылку: загружает страницу, эмулирует поведение пользователя, парсит и сохраняет данные."""
         for attempt in range(self.max_retries):
             try:
-                print(f'Попытка {attempt + 1}/{self.max_retries}: {link}')
+                print(f'Обработка ссылки (попытка {attempt + 1}/{self.max_retries}): {link}')
 
+                # Загрузка страницы
                 self.driver.get(link)
-                self.user_emulation.random_delay(2,5)
+
+                # Эмуляция поведения пользователя
+                self.user_emulation.random_delay(2, 5)
                 self.user_emulation.emulate_reading()
                 self.user_emulation.emulate_mouse_movement()
 
+                # Получение и обработка HTML
                 html = self.driver.page_source
+                if not html:
+                    print(f"Пустой HTML для ссылки: {link}")
+                    continue
 
-                if html:
-                    parsed_data = self.data_parser.parse_listing_data(driver, html)
-                    if parsed_data:
-                        self.csv_manager.save_row(parsed_data)
-                        return True
+                # Парсинг данных
+                parsed_data = self.data_parser.parse_listing_data(html, link)
+                if not parsed_data:
+                    print(f"Не удалось распарсить данные для ссылки: {link}")
+                    continue
+
+                # Сохранение данных
+                self.csv_manager.save_row(parsed_data)
+                return True
 
             except (WebDriverException, MaxRetryError, NewConnectionError) as e:
-                print(f"Ошибка: {e}")
+                print(f"Ошибка при обработке ссылки {link}: {str(e)}")
                 if attempt == self.max_retries - 1:
                     return False
-                time.sleep(random.uniform(2, 5))  # Пауза перед повторной попыткой
+
+                # Случайная задержка перед повторной попыткой
+                delay = random.uniform(2, 5)
+                print(f"Повторная попытка через {delay:.1f} сек...")
+                time.sleep(delay)
 
         return False
-
-
