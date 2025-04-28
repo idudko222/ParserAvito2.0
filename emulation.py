@@ -28,8 +28,8 @@ class UserEmulator:
         body = self.driver.find_element(By.TAG_NAME, 'body')
 
         for _ in range(random.randint(1, 3)):
-            x_offset = random.random(50, 300)
-            y_offset = random.random(50, 300)
+            x_offset = random.uniform(50, 300)
+            y_offset = random.uniform(50, 300)
 
             actions.move_to_element_with_offset(body, x_offset, y_offset)
             actions.pause(random.uniform(0.2, 1.5))
@@ -40,6 +40,6 @@ class UserEmulator:
                 actions.pause(random.uniform(0.2, 1.5))
                 actions.perform()
 
-        def random_delay(self, min_delay, max_delay):
-            """Случайная задержка"""
-            time.sleep(random.uniform(min_delay, max_delay))
+    def random_delay(self, min_delay, max_delay):
+        """Случайная задержка"""
+        time.sleep(random.uniform(min_delay, max_delay))

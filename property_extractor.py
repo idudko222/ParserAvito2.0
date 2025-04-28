@@ -1,6 +1,5 @@
-import requests
 from bs4 import BeautifulSoup
-from locator import LocatorAvito as loc
+from const.locator import LocatorAvito as loc
 from datetime import datetime, timedelta
 
 
