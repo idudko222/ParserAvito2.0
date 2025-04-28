@@ -16,7 +16,7 @@ def main():
         user_emulator = UserEmulator(driver) # Эмуляция действий человека
         data_parser = DataParser()  # Парсер данных
 
-        link_processor = LinkProcessor(driver, user_emulator, data_parser, csv_manager, 3)
+        link_processor = LinkProcessor(driver, user_emulator, data_parser, csv_manager)
 
         links = csv_manager.read_links()
         total_links = len(links)

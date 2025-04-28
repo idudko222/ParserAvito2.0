@@ -6,7 +6,7 @@ from config import config
 
 
 class LinkProcessor:
-    def __init__(self, driver, user_emulation, data_parser, csv_manager, max_retries=3):
+    def __init__(self, driver, user_emulation, data_parser, csv_manager):
         self.driver = driver
         self.user_emulation = user_emulation
         self.data_parser = data_parser
@@ -23,7 +23,7 @@ class LinkProcessor:
                 self.driver.get(link)
 
                 # Эмуляция поведения пользователя
-                self.user_emulation.random_delay(2, 5)
+                self.user_emulation.random_delay()
                 self.user_emulation.emulate_reading()
                 self.user_emulation.emulate_mouse_movement()
 

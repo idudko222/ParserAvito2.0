@@ -1,9 +1,11 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+
 from property_extractor import PropertyExtractor
-from config import config
+
 
 class DataParser:
+
     def get_html(self, driver, link):
         """Загружает HTML страницы и ждёт появления ключевых элементов."""
         try:
@@ -42,7 +44,8 @@ class DataParser:
             }
 
             # Проверка обязательных полей
-            if any(data.get(field) in (None, "") for field in config.get("required_fields")):
+            required_fields = ["price", "date", "region", "geo_lat", "geo_lon"]
+            if any(data.get(field) in (None, "") for field in required_fields):
                 print(f"Пропуск записи: не хватает данных для {link}")
                 return None
             if data:
