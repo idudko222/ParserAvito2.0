@@ -2,6 +2,7 @@ import random
 import time
 from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import MaxRetryError, NewConnectionError
+from config import config
 
 
 class LinkProcessor:
@@ -10,7 +11,7 @@ class LinkProcessor:
         self.user_emulation = user_emulation
         self.data_parser = data_parser
         self.csv_manager = csv_manager
-        self.max_retries = max_retries
+        self.max_retries = config.get("scraping.max_retries")
 
     def process_link(self, link):
         """Обрабатывает одну ссылку: загружает страницу, эмулирует поведение пользователя, парсит и сохраняет данные."""

@@ -3,13 +3,16 @@ from csv_manager import CSVManager
 from emulation import UserEmulator
 from link_processor import LinkProcessor
 from parser import DataParser
+from config import config
 
 
 def main():
     selenium_driver = SeleniumDriver()
     driver = selenium_driver.driver # Инициализируем драйвера
     try:
-        csv_manager = CSVManager(out_file='csv/out/test.csv', in_file='csv/in/properties_urls.csv') # Считываем ссылки
+        input_file = config.get("files.input_csv")
+        output_file = config.get("files.output_csv")
+        csv_manager = CSVManager(input_file, output_file) # Считываем ссылки
         user_emulator = UserEmulator(driver) # Эмуляция действий человека
         data_parser = DataParser()  # Парсер данных
 
