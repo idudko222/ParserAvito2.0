@@ -10,7 +10,7 @@ class Config:
     DEFAULT_SETTINGS = {
         # Настройки Selenium WebDriver
         "selenium": {
-            "headless": True,  # Режим без графического интерфейса (True/False)
+            "headless": False,  # Режим без графического интерфейса (True/False)
             "user_agent": "Mozilla/5.0...",  # Заголовок User-Agent для имитации браузера
             "page_load_timeout": 10,  # Макс. время загрузки страницы (сек)
             "implicit_wait": 7,  # Неявное ожидание элементов (сек)

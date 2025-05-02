@@ -30,13 +30,13 @@ class LinkProcessor:
                 # Получение и обработка HTML
                 html = self.driver.page_source
                 if not html:
-                    print(f"Пустой HTML для ссылки: {link}")
+                    print("Пустой HTML.")
                     continue
 
                 # Парсинг данных
                 parsed_data = self.data_parser.parse_listing_data(html, link)
                 if not parsed_data:
-                    print(f"Не удалось распарсить данные для ссылки: {link}")
+                    print("Не удалось распарсить данные.")
                     continue
 
                 # Сохранение данных
@@ -44,12 +44,12 @@ class LinkProcessor:
                 return True
 
             except (WebDriverException, MaxRetryError, NewConnectionError) as e:
-                print(f"Ошибка при обработке ссылки {link}: {str(e)}")
+                print(f"Ошибка при обработке ссылки: {str(e)}")
                 if attempt == self.max_retries - 1:
                     return False
 
                 # Случайная задержка перед повторной попыткой
-                delay = random.uniform(2, 5)
+                delay = random.uniform(1, 2)
                 print(f"Повторная попытка через {delay:.1f} сек...")
                 time.sleep(delay)
 
