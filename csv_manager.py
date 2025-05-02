@@ -37,3 +37,11 @@ class CSVManager:
                 writer.writerow(data)
         except Exception as e:
             print(f'Ошибка сохранения строки в {self.out_file}: {e}')
+
+    def save_new_links(self, data):
+        """Сохраняет собранные ссылки в CSV-файл"""
+        with open(self.in_file, mode="a", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=["title", "price", "link"])
+            if file.tell() == 0:  # Если файл пустой, записываем заголовки
+                writer.writeheader()
+            writer.writerows(data)

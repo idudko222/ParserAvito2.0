@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 from const.locator import LocatorAvito as loc
 from datetime import datetime, timedelta
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium_driver import SeleniumDriver
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class PropertyExtractor:
@@ -11,7 +14,7 @@ class PropertyExtractor:
         try:
             price_element = self.soup.select_one(loc.PRICE[1])
             if price_element:
-               return price_element.text.strip().replace("\xa0", "").replace("₽", "")
+                return price_element.text.strip().replace("\xa0", "").replace("₽", "")
 
         except AttributeError as e:
             print(f'Цена не найдена: {e}')
@@ -167,3 +170,48 @@ class PropertyExtractor:
         except Exception as e:
             print(f"Ошибка парсинга типа объекта: {e}")
         return None
+
+    def get_new_link_data(self):
+        ads = self.soup.select(loc.TITLES[1])
+        data_list = []
+        for ad in ads:
+            try:
+                title = ad.select_one(loc.NAME[1]).text.strip().replace("\xa0м²", "").replace("\xa0эт.", "")
+                price = ad.select_one(loc.PRICE[1]).get("content", "0")
+                link = "https://www.avito.ru" + ad.select_one(loc.URL[1]).get("href", "")
+
+                data_list.append({"title": title, "price": price, "link": link})
+            except Exception as e:
+                print(f"Ошибка парсинга: {e}")
+
+        return data_list
+
+    @staticmethod
+    def get_next_page_url(driver):
+        """Находит URL следующей страницы"""
+        try:
+            # Ждем, пока кнопка "Следующая страница" станет кликабельной
+            next_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(loc.NEXT_BUTTON)
+            )
+
+            # Проверяем, не заблокирована ли кнопка
+            if "disabled" in next_button.get_attribute("class"):
+                return None  # Если кнопка неактивна, значит, это последняя страница
+
+            # Запоминаем текущий URL
+            current_url = driver.current_url
+
+            # Кликаем на кнопку
+            next_button.click()
+
+            # Ждем, пока URL изменится (новая страница загрузится)
+            WebDriverWait(driver, 10).until(
+                EC.url_changes(current_url)
+            )
+
+            # Возвращаем новый URL
+            return driver.current_url
+        except Exception as e:
+            print(f"Не удалось найти кнопку перехода на следующую страницу: {e}")
+            return None

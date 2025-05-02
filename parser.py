@@ -55,3 +55,19 @@ class DataParser:
         except Exception as e:
             print(f"Ошибка парсинга {link}: {str(e)}")
             return None
+
+    def parse_new_links(self, html, link):
+        try:
+            if not html:
+                return None
+
+            extractor = PropertyExtractor(html)
+            data = extractor.get_new_link_data()
+
+            if data:
+                print("Успешно обработана")
+            return data
+
+        except Exception as e:
+            print(f"Ошибка парсинга {link}: {str(e)}")
+            return None
