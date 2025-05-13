@@ -24,8 +24,8 @@ class LinkProcessor:
 
                 # Эмуляция поведения пользователя
                 self.user_emulation.random_delay()
-                self.user_emulation.emulate_reading()
-                self.user_emulation.emulate_mouse_movement()
+                # self.user_emulation.emulate_reading()
+                # self.user_emulation.emulate_mouse_movement()
 
                 # Получение и обработка HTML
                 html = self.driver.page_source

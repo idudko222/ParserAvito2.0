@@ -14,6 +14,15 @@ class Config:
             "user_agent": "Mozilla/5.0...",  # Заголовок User-Agent для имитации браузера
             "page_load_timeout": 10,  # Макс. время загрузки страницы (сек)
             "implicit_wait": 7,  # Неявное ожидание элементов (сек)
+            "proxy": {
+            "enabled": False,
+            "proxies": [
+                "socks5://oVxHPd:VDkX9P@45.11.126.101:9443",
+                #"http://W7MAY4:3A0V4D@45.11.124.80:9525",
+                #"http://AQGX5j:svsaBX@181.177.85.163:9454",
+            ],
+            "ssl_verify": False
+            }
         },
 
         # Настройки парсинга

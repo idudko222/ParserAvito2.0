@@ -42,18 +42,19 @@ def parse_properties():
         execution_time = end_time - start_time
         hours = int(execution_time / 3600)
         minutes = int((execution_time - hours * 3600) / 60)
-        print(f"\nВсе ссылки обработаны. Время выполнения: {hours} часов, {minutes} минут.")
+        seconds = int((execution_time - hours * 3600 - minutes * 60) / 60)
+        print(f"\nВсе страницы обработаны. Время выполнения: {hours} часов, {minutes} минут, {seconds} секунд.")
 
     finally:
         driver.quit()
 
 
 def parse_links():
-    url = BASE_URL
+    base_url = BASE_URL  # Основной URL без параметров пагинации
     selenium_driver = SeleniumDriver()
     driver = selenium_driver.driver  # Инициализируем драйвера
     number_of_links = 2000
-    counter = int(number_of_links / 50)  # Количество ссылок, которое необходимо собрать
+    pages_to_parse = int(number_of_links / 50)  # Количество страниц для парсинга
 
     try:
         start_time = time.time()  # Замер времени старта
@@ -64,21 +65,22 @@ def parse_links():
         data_parser = DataParser()
         link_processor = LinkProcessor(driver, user_emulator, data_parser, csv_manager)
 
-        while url and counter > 0:
-            link_processor.process_new_links(url)
-            counter -= 1
-            url = PropertyExtractor.get_next_page_url(driver)
+        for page in range(1, pages_to_parse + 1):
+            current_url = f"{base_url}?p={page}"  # Формируем URL с номером страницы
+            print(f"Обработка страницы {page}/{pages_to_parse}")
+            link_processor.process_new_links(current_url)
 
-        # Когда все ссылки обработаны — выводим время
         end_time = time.time()
         execution_time = end_time - start_time
         hours = int(execution_time / 3600)
         minutes = int((execution_time - hours * 3600) / 60)
-        print(f"\nВсе ссылки обработаны. Время выполнения: {hours} часов, {minutes} минут.")
+        seconds = int(execution_time - hours * 3600 - minutes * 60)
+        print(f"\nВсе страницы обработаны. Время выполнения: {hours} часов, {minutes} минут, {seconds} секунд.")
 
     finally:
-        driver.quit()  # Закрываем браузер
+        driver.quit()
 
 
 if __name__ == '__main__':
     parse_links()
+    #parse_properties()
